@@ -1,3 +1,11 @@
 Using R to extract Linked Data via the RSPARQL package
 http://cran.r-project.org/web/packages/SPARQL/index.html
-SPARQL queries
+
+General template to run SPARQL queries in R using the RSPARQL package
+> library(SPARQL)
+> endpoint <- "put the endpoint here for e.g. http://dbpedia.org/sparql"
+> query <- "put the query within these double quotes"
+> res <- SPARQL (endpoint,query)$results
+> res
+
+
