@@ -8,11 +8,38 @@ General template to run SPARQL queries in R using the RSPARQL package
 > res <- SPARQL (endpoint,query)$results
 > res
 
-
 =========================================
 LinkedCT
 =========================================
-#Query to extract the total number of trials per country per disease per year 
+# Query to extract the total number of trials per country per disease per year 
 > endpoint <- "http://db0.aksw.org:8895/sparql"
 > query <- "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns> prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> prefix linkedct:<http://data.linkedct.org/vocab/resource/> SELECT  DISTINCT ?countryname ?conditionname count(distinct(?trial)) AS ?NoOfTrials FROM <http://data.linkedct.org> WHERE { ?trial ?type linkedct:trial. ?trial linkedct:trial_condition ?condition. ?condition rdfs:label ?conditionname. ?trial linkedct:trial_location_countries ?country. ?country rdfs:label ?countryname . ?trial linkedct:completion_date ?date. FILTER regex(?date, '1999')}GROUP BY ?countryname ?conditionname ORDER BY DESC(count(distinct(?trial)))"
+
+=========================================
+USPTO Patents
+=========================================
+# Query to extract the total number of patents per country per year
+> endpoint <- "http://patents.aksw.org/patents/sparql"
+> query <- PREFIX patent:<http://us.patents.aksw.org/schema/> PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> PREFIX dcterms:<http://purl/org/dc/terms/> SELECT COUNT(DISTINCT (?s)) AS ?NoOfPatents ?countryname FROM <http://aksw.patents.org> WHERE {?s patent:hasCountry ?country. ?country rdfs:label ?countryname. ?s  dcterms:date ?year. FILTER (?year IN('2000-01-01'^^xsd:date, '2000-02-01'^^xsd:date, '2000-03-01'^^xsd:date, '2000-04-01'^^xsd:date, '2000-05-01'^^xsd:date, '2000-06-01'^^xsd:date, '2000-07-01'^^xsd:date, '2000-08-01'^^xsd:date, '2000-09-01'^^xsd:date, '2000-10-01'^^xsd:date, '2000-11-01'^^xsd:date, '2000-12-01'^^xsd:date))}"
+
+=========================================
+Scimago
+=========================================
+# Query to extract the total number of documents and h-index per country per year
+> endpoint <- "http://db0.aksw.org:8895/sparql"
+> query <- "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX scimago:<http://scimago.org/> PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> SELECT DISTINCT ?countryname ?year ?hindex ?noOfDocs FROM <http://scimago.org> WHERE { ?s rdf:type scimago:journalRanking. ?s scimago:country ?country. ?country rdfs:label ?countryname.  ?s scimago:hIndex ?hindex. ?s scimago:docs ?noOfDocs. ?s scimago:year ?year. FILTER ((?year=<http://reference.data.gov.uk/id/year/2000>) || (?year=<http://reference.data.gov.uk/id/year/2001>) || (?year=<http://reference.data.gov.uk/id/year/2002>) || (?year=<http://reference.data.gov.uk/id/year/2003>) || (?year=<http://reference.data.gov.uk/id/year/2004>) || (?year=<http://reference.data.gov.uk/id/year/2005>) ||  (?year=<http://reference.data.gov.uk/id/year/2006>) || (?year=<http://reference.data.gov.uk/id/year/2007>) ||  (?year=<http://reference.data.gov.uk/id/year/2008>) ||  (?year=<http://reference.data.gov.uk/id/year/2009>) ||  (?year=<http://reference.data.gov.uk/id/year/20010>) ) }"
+
+=========================================
+World Bank
+=========================================
+# Query to extract specific variables (by specifying the corresponding indicator) per country per year 
+> endpoint <- "http://worldbank.270a.info/sparql"
+> query <- "PREFIX property: <http://worldbank.270a.info/property/> PREFIX indicator: <http://worldbank.270a.info/classification/indicator/> PREFIX sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> PREFIX sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#> PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX skos: <http://www.w3.org/2004/02/skos/core#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT ?label ?obsValue ?year WHERE  { ?observationURI property:indicator indicator:SP.ADO.TFRT; sdmx-dimension:refArea ?refAreaURI; sdmx-dimension:refPeriod ?year; sdmx-measure:obsValue ?obsValue.  ?refAreaURI a dbo:Country . ?refAreaURI skos:prefLabel ?label.  FILTER ((?year=<http://reference.data.gov.uk/id/year/1999>) || (?year=<http://reference.data.gov.uk/id/year/2000>) || (?year=<http://reference.data.gov.uk/id/year/2001>) || (?year=<http://reference.data.gov.uk/id/year/2002>) || (?year=<http://reference.data.gov.uk/id/year/2003>) || (?year=<http://reference.data.gov.uk/id/year/2004>) || (?year=<http://reference.data.gov.uk/id/year/2005>) || (?year=<http://reference.data.gov.uk/id/year/2006>) || (?year=<http://reference.data.gov.uk/id/year/2007>) || (?year=<http://reference.data.gov.uk/id/year/2008>) || (?year=<http://reference.data.gov.uk/id/year/2009>) || (?year=<http://reference.data.gov.uk/id/year/2010>))}"
+
+=========================================
+OECD
+=========================================
+# Query to extract specific variables (by specifying the corresponding graph of the indicator) per country per year
+> endpoint <- "http://oecd.270a.info/sparql"
+> query <- "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#> PREFIX qb: <http://purl.org/linked-data/cube#> SELECT DISTINCT ?countryname ?year ?value FROM <http://oecd.270a.info/graph/FDI_FLOW_PARTNER> FROM <http://oecd.270a.info/graph/meta> WHERE { ?s a qb:Observation. ?s <http://oecd.270a.info/dimension/1.0/YEA> ?year. ?s <http://oecd.270a.info/dimension/1.0/COU> ?country. ?s <http://oecd.270a.info/measure/1.0/OBS_VALUE> ?value. ?s <http://oecd.270a.info/dimension/1.0/PC> <http://oecd.270a.info/code/1.0/CL_FDI_FLOW_PARTNER_PC/A1>. ?s <http://oecd.270a.info/dimension/1.0/CUR> <http://oecd.270a.info/code/1.0/CL_FDI_FLOW_PARTNER_CUR/USD>. ?s <http://oecd.270a.info/dimension/1.0/FLOW> <http://oecd.270a.info/code/1.0/CL_FDI_FLOW_PARTNER_FLOW/IN>. ?country skos:prefLabel ?countryname. FILTER langMatches(lang(?countryname),'en')  FILTER ((?year=<http://reference.data.gov.uk/id/year/1999>) || (?year=<http://reference.data.gov.uk/id/year/2000>) || (?year=<http://reference.data.gov.uk/id/year/2001>) || (?year=<http://reference.data.gov.uk/id/year/2002>) || (?year=<http://reference.data.gov.uk/id/year/2003>) || (?year=<http://reference.data.gov.uk/id/year/2004>) || (?year=<http://reference.data.gov.uk/id/year/2005>) || (?year=<http://reference.data.gov.uk/id/year/2006>) || (?year=<http://reference.data.gov.uk/id/year/2007>) || (?year=<http://reference.data.gov.uk/id/year/2008>) || (?year=<http://reference.data.gov.uk/id/year/2009>) || (?year=<http://reference.data.gov.uk/id/year/2010>))}"
 
