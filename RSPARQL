@@ -9,3 +9,10 @@ General template to run SPARQL queries in R using the RSPARQL package
 > res
 
 
+=========================================
+LinkedCT
+=========================================
+#Query to extract the total number of trials per country per disease per year 
+> endpoint <- "http://db0.aksw.org:8895/sparql"
+> query <- "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns> prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> prefix linkedct:<http://data.linkedct.org/vocab/resource/> SELECT  DISTINCT ?countryname ?conditionname count(distinct(?trial)) AS ?NoOfTrials FROM <http://data.linkedct.org> WHERE { ?trial ?type linkedct:trial. ?trial linkedct:trial_condition ?condition. ?condition rdfs:label ?conditionname. ?trial linkedct:trial_location_countries ?country. ?country rdfs:label ?countryname . ?trial linkedct:completion_date ?date. FILTER regex(?date, '1999')}GROUP BY ?countryname ?conditionname ORDER BY DESC(count(distinct(?trial)))"
+
