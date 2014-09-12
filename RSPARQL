@@ -52,7 +52,7 @@ List of 13 variables used in this project and their respective indicators:
 * Researchers in R&D (per million) - SP.POP.SCIE.RD.P6
 
 =========================================
-OECD
+OECD*
 =========================================
 # Query to extract specific variables (by specifying the corresponding graph of the indicator) per country per year
 # This query is for the indicator "Development Aid: Foreign direct investment flows by country"
@@ -78,3 +78,5 @@ Queries for specific indicators:
 
 # All causes of mortality (1999 to 2010)
 > query <- "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#> PREFIX qb: <http://purl.org/linked-data/cube#> SELECT DISTINCT ?countryname ?year ?value FROM <http://oecd.270a.info/graph/HEALTH_STAT> FROM <http://oecd.270a.info/graph/meta> WHERE { ?s a qb:Observation. ?s <http://oecd.270a.info/dimension/1.0/VAR> ?o. ?o skos:notation "CICDALLC". ?s <http://oecd.270a.info/dimension/1.0/YEA> ?year. ?s  <http://oecd.270a.info/dimension/1.0/COU> ?country. ?s <http://oecd.270a.info/measure/1.0/OBS_VALUE> ?value. ?s <http://oecd.270a.info/dimension/1.0/UNIT> <http://oecd.270a.info/code/1.0/CL_HEALTH_STAT_UNIT/NBPOPUPC>. ?s <http://oecd.270a.info/dimension/1.0/VAR> <http://oecd.270a.info/code/1.0/CL_HEALTH_STAT_VAR/CICDALLC>. ?country skos:prefLabel ?countryname. FILTER langMatches(lang(?countryname),"en") FILTER ((?year=<http://reference.data.gov.uk/id/year/1999>) || (?year=<http://reference.data.gov.uk/id/year/2000>) || (?year=<http://reference.data.gov.uk/id/year/2001>) || (?year=<http://reference.data.gov.uk/id/year/2002>) || (?year=<http://reference.data.gov.uk/id/year/2003>) || (?year=<http://reference.data.gov.uk/id/year/2004>) || (?year=<http://reference.data.gov.uk/id/year/2005>) || (?year=<http://reference.data.gov.uk/id/year/2006>) || (?year=<http://reference.data.gov.uk/id/year/2007>) || (?year=<http://reference.data.gov.uk/id/year/2008>) || (?year=<http://reference.data.gov.uk/id/year/2009>) || (?year=<http://reference.data.gov.uk/id/year/2010>))}"
+
+*The OECD variables contained a large number of "NA" values and were thus discarded at the end. 
